@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 
 export default function Home() {
+  // Removed apiUrl const for direct inline usage
   const [dice, setDice] = useState(null);
   const [rolling, setRolling] = useState(false);
   const [error, setError] = useState(null);
@@ -22,8 +23,7 @@ export default function Home() {
     
     try {
       if (mode === 'single') {
-        const res = await fetch("https://dice-api-1.onrender.com/roll");
-
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roll`);
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
@@ -34,7 +34,7 @@ export default function Home() {
           setRolling(false);
         }, 1000);
       } else {
-        const res = await fetch('http://localhost:5000/roll-multiple', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roll-multiple`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ export default function Home() {
       }
     } catch (error) {
       console.error('Error rolling dice:', error);
-      setError('Failed to connect to server. Make sure the Flask API is running on port 5000.');
+      setError('Failed to connect to server. Make sure the API is running.');
       setRolling(false);
     }
   };
